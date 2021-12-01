@@ -154,6 +154,81 @@ filter {
 }
 ```
 
+
 ```
 sudo vi /etc/logstash/conf.d/30-elasticsearch-output.conf
 ```
+Thêm vào các dòng sau
+```
+output {
+  elasticsearch {
+    hosts => ["localhost:9200"]
+    manage_template => false
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
+  }
+}
+```
+Test file cấu hình logstash
+```
+sudo -u logstash /usr/share/logstash/bin/logstash --path.settings /etc/logstash -t
+```
+Nếu file cấu hình thành công thì khởi động dịch vụ logstash
+```
+sudo systemctl start logstash
+sudo systemctl enable logstash
+```
+# 4. Cài đặt và cấu hình Filebeat
+* Filebeat: collects and ships log files.
+* Metricbeat: collects metrics from your systems and services.
+* Packetbeat: collects and analyzes network data.
+* Winlogbeat: collects Windows event logs.
+* Auditbeat: collects Linux audit framework data and monitors file integrity.
+* Heartbeat: monitors services for their availability with active probing
+## Cài đặt filebeat
+```
+sudo yum install filebeat
+```
+Mở file cấu hình filebeat
+```
+sudo vi /etc/filebeat/filebeat.yml
+```
+Tìm và Command những dòng 
+```
+...
+#output.elasticsearch:
+  # Array of hosts to connect to.
+  #hosts: ["localhost:9200"]
+...
+```
+Và Uncommand những dòng logstash output
+```
+output.logstash:
+  # The Logstash hosts
+  hosts: ["localhost:5044"]
+ ```
+ 
+ ```
+ sudo filebeat modules enable system
+ ```
+Xem danh sách các module đã bật hoặc tắt
+ ```
+ sudo filebeat modules list
+ ```
+ ### Load template
+ ```
+ sudo filebeat setup --template -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["localhost:9200"]'
+```
+
+```
+sudo filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['localhost:9200'] -E setup.kibana.host=localhost:5601
+```
+### Enable filebeat
+```
+sudo systemctl start filebeat
+sudo systemctl enable filebeat
+```
+```
+curl -X GET 'http://localhost:9200/filebeat-*/_search?pretty'
+```
+
+# 5. Exploring Kibana Dashboards
