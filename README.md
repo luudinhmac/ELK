@@ -232,5 +232,5 @@ curl -X GET 'http://localhost:9200/filebeat-*/_search?pretty'
 ```
 
 # 5. Exploring Kibana Dashboards
-
+Truy cập vào kibana explore bằng địa chỉ http://10.10.10.190
 Contact me: [Lưu Đình Mác]("fb.com/luudinhmac49")
