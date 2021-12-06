@@ -192,7 +192,7 @@ Mở file cấu hình filebeat
 ```
 sudo vi /etc/filebeat/filebeat.yml
 ```
-Tìm và Command những dòng 
+Tìm và Command những dòng
 ```
 ...
 #output.elasticsearch:
@@ -206,7 +206,7 @@ output.logstash:
   # The Logstash hosts
   hosts: ["localhost:5044"]
  ```
- 
+
  ```
  sudo filebeat modules enable system
  ```
@@ -232,3 +232,5 @@ curl -X GET 'http://localhost:9200/filebeat-*/_search?pretty'
 ```
 
 # 5. Exploring Kibana Dashboards
+
+Contact me: [Lưu Đình Mác]("fb.com/luudinhmac49")
